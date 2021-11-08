@@ -1,5 +1,6 @@
 {
   "name": "electron-with-react",
+  "main": "public/electron.js",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,11 +12,30 @@
     "react-scripts": "4.0.3",
     "web-vitals": "^1.0.1"
   },
+  "devDependencies": {
+    "concurrently": "^6.3.0",
+    "electron": "^15.3.0",
+    "electron-builder": "^22.13.1",
+    "wait-on": "^6.0.0"
+  },
+  "build": {
+    "appId": "com.example.electron-app",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "concurrently \"npm run react-start\" \"npm run electron-start\"",
+    "react-start": "BROWSER=none react-scripts start",
+    "react-build": "react-scripts build",
+    "build": "npm run react-build && electron-builder --publish=always",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron-start": "wait-on http://localhost:3000 && mode=dev electron ."
   },
   "eslintConfig": {
     "extends": [
